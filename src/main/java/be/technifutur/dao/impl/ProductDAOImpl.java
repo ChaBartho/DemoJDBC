@@ -32,7 +32,7 @@ public class ProductDAOImpl implements ProductDAO {
             List<Product> products = new ArrayList<>();
 
             while( rs.next() )
-                products.add( convert(rs) );
+                products.add( Converter.convert(rs, Product.class) );
            return products;
 
         }
@@ -59,7 +59,7 @@ public class ProductDAOImpl implements ProductDAO {
                 ) {
 
             if( rs.next() )
-                return Optional.of( convert(rs) );
+                return Optional.of( Converter.convert(rs, Product.class) );
             return Optional.empty();
 
         }
@@ -71,8 +71,8 @@ public class ProductDAOImpl implements ProductDAO {
 
 
     @Override
-    public void update(Long id, Product entity) {
-
+    public boolean update(Long id, Product entity) {
+        return false;
     }
 
 
@@ -85,6 +85,7 @@ public class ProductDAOImpl implements ProductDAO {
 
 
 
+/*
     private Product convert(ResultSet rs) throws SQLException{
         Product prod = new Product();
 
@@ -96,11 +97,8 @@ public class ProductDAOImpl implements ProductDAO {
         prod.setDiscontinued( rs.getBoolean("discontinued") );
 
         return prod;
-
     }
-
-
-
+*/
 
 
 

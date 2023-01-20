@@ -3,9 +3,9 @@ package be.technifutur.models;
 import lombok.Data;
 
 @Data
-public class Supplier {
+public class Customer {
 
-    private long id;
+    private String id;
     private String company;
     private String contactName;
     private String contactTitle;
@@ -16,7 +16,6 @@ public class Supplier {
     private String country;
     private String phone;
     private String fax;
-    private String homepage;
 
 
 }

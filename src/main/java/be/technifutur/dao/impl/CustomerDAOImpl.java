@@ -1,59 +1,56 @@
 package be.technifutur.dao.impl;
 import be.technifutur.ConnectionFactory;
-import be.technifutur.dao.SupplierDAO;
-import be.technifutur.models.Supplier;
+import be.technifutur.dao.CustomerDAO;
+import be.technifutur.models.Customer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SupplierDAOImpl implements SupplierDAO {
-
+public class CustomerDAOImpl implements CustomerDAO {
     @Override
-    public void insert(Supplier entity) {
+    public void insert(Customer entity) {
     }
 
+
     @Override
-    public List<Supplier> getAll() {
+    public List<Customer> getAll() {
+
         String sql = """
                 SELECT *
-                FROM suppliers
+                FROM customers
                 """;
-
         try (
-            Connection co = ConnectionFactory.createConnection();
-            Statement stmt = co.createStatement();
-            ResultSet rs = stmt.executeQuery( sql )
-        ) {
-
-            List<Supplier> suppliers = new ArrayList<>();
-
-            while( rs.next() )
-                suppliers.add( Converter.convert(rs, Supplier.class) );
-            return suppliers;
-
-        }
-        catch (SQLException e) {
-            throw new RuntimeException("error in data access", e);
-        }
-    }
-
-    @Override
-    public Optional<Supplier> getOne(Long id) {
-
-        String sql = """
-                SELECT *
-                FROM suppliers
-                WHERE supplier_id =
-                """ + id;
-        try(
                 Connection co = ConnectionFactory.createConnection();
                 Statement stmt = co.createStatement();
-                ResultSet rs = stmt.executeQuery( sql )
-                ){
+                ResultSet rs = stmt.executeQuery( sql );
+        ) {
+            List<Customer> customers = new ArrayList<>();
+            return customers;
+
+        }
+        catch (SQLException ex){
+            throw new RuntimeException("error in data access", ex);
+        }
+
+    }
+
+    @Override
+    public Optional<Customer> getOne(String id) {
+
+        String sql = """
+                SELECT *
+                FROM customers
+                WHERE customer_id =
+                """ + id;
+        try (
+                Connection co = ConnectionFactory.createConnection();
+                Statement stmt = co.createStatement();
+                ResultSet rs = stmt.executeQuery( sql );
+        ) {
 
             if( rs.next() )
-                return Optional.of( Converter.convert(rs, Supplier.class) );
+                return Optional.of( Converter.convert(rs, Customer.class)  );
             return Optional.empty();
 
         }
@@ -64,12 +61,10 @@ public class SupplierDAOImpl implements SupplierDAO {
 
 
 
-
     @Override
-    public boolean update(Long id, Supplier entity) {
-
+    public boolean update(String id, Customer entity) {
         String sql =  """
-                UPDATE suppliers
+                UPDATE customers
                 SET
                     company_name = ?
                     ,contact_name = ?
@@ -81,10 +76,8 @@ public class SupplierDAOImpl implements SupplierDAO {
                     ,country = ?
                     ,phone = ?
                     ,fax = ?
-                    ,homepage = ?
-                WHERE supplie_id = ?
+                WHERE costumer_id = ?
                 """;
-
         try(
                 Connection connection = ConnectionFactory.createConnection();
                 PreparedStatement stmt = connection.prepareStatement( sql );
@@ -100,8 +93,7 @@ public class SupplierDAOImpl implements SupplierDAO {
             stmt.setString( 8, entity.getCountry() );
             stmt.setString( 9, entity.getPhone() );
             stmt.setString( 10, entity.getFax() );
-            stmt.setString( 11, entity.getHomepage() );
-            stmt.setLong( 12, id );
+            stmt.setString( 11, id );
 
             return stmt.executeUpdate() == 1;
         }
@@ -112,19 +104,18 @@ public class SupplierDAOImpl implements SupplierDAO {
 
 
 
-
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
 
         String sql = """
-                DELETE FROM suppliers
-                WHERE supplier_id = ?
+                DELETE FROM customers
+                WHERE customer_id = ?
                 """+ id;
 
         String sqlNull= """
-                UPDATE products
-                SET supplier_id = null
-                WHERE supplier_id = ?
+                UPDATE customers
+                SET customer_id = null
+                WHERE customer_id = ?
                 """;
 
         try(
@@ -132,13 +123,13 @@ public class SupplierDAOImpl implements SupplierDAO {
                 PreparedStatement stmt = connection.prepareStatement( sql );
                 PreparedStatement stmtnull = connection.prepareStatement( sqlNull )
         ){
-            stmtnull.setLong(1, id);
+            stmtnull.setString(1, id);
             stmtnull.executeUpdate();
 
-            stmt.setLong(1, id);
+            stmt.setString(1, id);
 
             if( stmt.executeUpdate() != 1 )
-                throw new RuntimeException("supplier not found");
+                throw new RuntimeException("customers not found");
         }
         catch ( SQLException ex ){
             throw new RuntimeException("error in data access", ex);
@@ -146,31 +137,21 @@ public class SupplierDAOImpl implements SupplierDAO {
     }
 
 
+/*    private Customer convertCust(ResultSet rs) throws SQLException{
+        Customer cust = new Customer();
 
+        cust.setId( rs.getLong("id") );
+        cust.setCompany( rs.getString("company"));
+        cust.setContactName( rs.getString("contactName"));
+        cust.setContactTitle( rs.getString("contactTitle"));
+        cust.setAddress( rs.getString("address"));
+        cust.setCity( rs.getString("city"));
+        cust.setRegion( rs.getString("region"));
+        cust.setPostalCode( rs.getString("postalCode"));
+        cust.setCountry( rs.getString("country"));
+        cust.setPhone( rs.getString("phone"));
+        cust.setFax( rs.getString("fax"));
 
-/*
-    private Supplier convertSupp(ResultSet rs) throws SQLException{
-        Supplier supp = new Supplier();
-
-        supp.setId( rs.getLong("supplier_id") );
-        supp.setCompany( rs.getString("company_name"));
-        supp.setContactName( rs.getString("contact_name"));
-        supp.setContactTitle( rs.getString("contact_title"));
-        supp.setAddress( rs.getString("address"));
-        supp.setCity( rs.getString("city"));
-        supp.setRegion( rs.getString("region"));
-        supp.setPostalCode( rs.getString("postal_code"));
-        supp.setCountry( rs.getString("country"));
-        supp.setPhone( rs.getString("phone"));
-        supp.setFax( rs.getString("fax"));
-        supp.setHomepage( rs.getString("homepage"));
-
-        return supp;
-    }
-*/
-
-
-
-
-
+        return cust;
+    }*/
 }

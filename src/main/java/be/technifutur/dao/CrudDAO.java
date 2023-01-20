@@ -16,7 +16,7 @@ public interface CrudDAO<TENTITY, TID> {
 
 
     //Update
-    void update(TID id, TENTITY entity);
+    boolean update(TID id, TENTITY entity);
 
 
     //Delete

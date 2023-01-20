@@ -11,7 +11,7 @@ public class Product {
     private double unitPrice;
     private int stock;
     private boolean discontinued;
-
+    private Supplier supplier;
 
 
 }
